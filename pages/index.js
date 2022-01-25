@@ -2,7 +2,6 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { inject, observer } from "mobx-react";
-import useAxios from "axios-hooks";
 import useSWR from "swr";
 import { usePersistentStore } from "../store";
 
@@ -20,7 +19,8 @@ export default observer(function Home(props) {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error!</p>;
-  if (data) {
+  if (data && data.length) {
+    // console.log(data.length);
     data[0].log();
   } else {
     mutate();
