@@ -1,30 +1,17 @@
 import Head from "next/head";
 import Image from "next/image";
+import { useEffect } from "react";
 import styles from "../styles/Home.module.css";
 import { inject, observer } from "mobx-react";
+import { Box } from "@mui/material";
 import useSWR from "swr";
+import MuiButton from "../components/MuiButton";
 import { usePersistentStore } from "../store";
+import Counter from "../containers/Counter";
+import Posts from "../containers/Posts";
 
 export default observer(function Home(props) {
   const store = usePersistentStore();
-  const fetcher = (url, test) =>
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => store.postData(data));
-
-  const { data, loading, error, mutate } = useSWR(
-    "https://jsonplaceholder.typicode.com/posts",
-    fetcher
-  );
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error!</p>;
-  if (data && data.length) {
-    // console.log(data.length);
-    data[0].log();
-  } else {
-    mutate();
-  }
   return (
     <div className={styles.container}>
       <Head>
@@ -45,30 +32,8 @@ export default observer(function Home(props) {
         </p>
 
         <div className={styles.grid}>
-          <div onClick={store.start} className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </div>
-
-          <div onClick={store.stop} className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </div>
-
-          <div onClick={store.resetStore} className={styles.card}>
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </div>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+          <Counter />
+          <Posts />
         </div>
       </main>
 
@@ -87,8 +52,3 @@ export default observer(function Home(props) {
     </div>
   );
 });
-
-const format = (t) =>
-  `${pad(t.getUTCHours())}:${pad(t.getUTCMinutes())}:${pad(t.getUTCSeconds())}`;
-
-const pad = (n) => (n < 10 ? `0${n}` : n);
